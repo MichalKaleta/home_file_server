@@ -1,6 +1,11 @@
 # home_file_server
 backup your files on home network server using web app client
 
+<b>Tech stack: </b> <br />
+Client: React, Sass <br />
+Server: Node , Express, Express-Fileupload <br />
+
+<b>INSATLL</b><br />
 There are 2 separate package.json files for server and client
 <code>npm install</code> in both <code> ./ and ./client </code>
 
