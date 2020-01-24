@@ -15,4 +15,4 @@ There are 2 separate package.json files for server and client
 
 <b>production</b> <br />
 server will serve static files from <code>./client/build</code> <br/>
-<code> npm run script build</code> from <code>./client dir</code>
+<code> npm run script build</code> from <code>./client</code> directory
