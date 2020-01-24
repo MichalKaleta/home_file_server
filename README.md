@@ -1,5 +1,6 @@
 # home_file_server
-backup your files on home network server using web app client
+Backup your files on home network server using web app client.
+It will keep uploaded directory strucure 
 
 <b>Tech stack: </b> <br />
 Client: React, Sass <br />
