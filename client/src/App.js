@@ -18,13 +18,13 @@ function App() {
       }
       axios.post('/upload', formData)
          .then(res => {
-            if (res.data) {
-               console.log('res:  ', res.data)
+            if (res.data.success) {
+               console.log('res:  ', res.data.success)
             } else {
-               //  throw err
+               throw res
             }
          }).catch(err => {
-            console.log('catched: ', err)
+            console.log('catched: ', err.response.data)
          })
    }
 

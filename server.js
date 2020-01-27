@@ -25,10 +25,29 @@ app.post('/upload', (req, res) => {
          fs.mkdirSync(dir);
       }
       file.mv(dir + file.name, (err) => {
+         console.log('err0:  ', err)
          if (err) throw err;
       })
    })
-   res.send('files uploded!')
-})
 
+   res.send({ success: 'files uploded!' })
+
+})
+let arr = []
+/////////
+const readBackup = (dir) => {
+
+   fs.readdirSync(BACKUP_DIR + dir).forEach(file => {
+      let subDir = dir + '//' + file;
+      if (fs.lstatSync(BACKUP_DIR + subDir).isDirectory()) {
+         dir[file] = [];
+         readBackup(subDir)
+      } else {
+         if (!arr[dir]) arr[dir] = []
+         arr[dir].push(file)
+      }
+   });
+}
+readBackup('')
+console.log(arr)
 app.listen(PORT) 
