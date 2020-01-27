@@ -1,0 +1,9 @@
+@import '../_common/variables.scss';
+
+.Download{
+   @include center_content;
+   flex-direction: column;
+   height: 100vh;
+   color: $main_color;
+   user-select: none;
+}

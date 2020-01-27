@@ -4,16 +4,30 @@ const path = require('path')
 const env = require('dotenv')
 const fs = require('fs')
 const fileupload = require("express-fileupload");
+const dirTree = require("directory-tree");
+
 env.config()
 const app = express();
+
 const PORT = process.env.PORT || 5000;
 const BACKUP_DIR = process.env.BACKUP_DIR || path.join(__dirname, '/files')
 
 app.use(bodyParser())
 app.use(fileupload({ parseNested: true }));
 app.use(express.static(path.join(__dirname, 'client/build')));
+//app.use(express.static(BACKUP_DIR));
 app.get('/', (req, res) => {
    res.sendFile(path.join(__dirname, 'client/build', 'index.html'))
+})
+
+app.get('/download', (req, res) => {
+   res.json(dirTree(BACKUP_DIR))
+})
+
+app.get('/file/', (req, res) => {
+   console.log(req.query.path1)
+   res.set('Content-Type', 'multipart/form-data')
+   res.download(path.join('C:/DEV/home_file_server/files/lolol.d'))
 })
 
 app.post('/upload', (req, res) => {
@@ -33,21 +47,4 @@ app.post('/upload', (req, res) => {
    res.send({ success: 'files uploded!' })
 
 })
-let arr = []
-/////////
-const readBackup = (dir) => {
-
-   fs.readdirSync(BACKUP_DIR + dir).forEach(file => {
-      let subDir = dir + '//' + file;
-      if (fs.lstatSync(BACKUP_DIR + subDir).isDirectory()) {
-         dir[file] = [];
-         readBackup(subDir)
-      } else {
-         if (!arr[dir]) arr[dir] = []
-         arr[dir].push(file)
-      }
-   });
-}
-readBackup('')
-console.log(arr)
 app.listen(PORT) 
