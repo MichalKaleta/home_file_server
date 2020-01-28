@@ -12,7 +12,12 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const BACKUP_DIR = process.env.BACKUP_DIR || path.join(__dirname, '/files')
 
-app.use(bodyParser())
+// parse various different custom JSON types as JSON
+app.use(bodyParser.json())
+app.use(bodyParser.raw({ type: 'application/*.*' }))
+app.use(bodyParser.text({ type: 'text/html' }))
+app.use(express.urlencoded({ extended: true }))
+
 app.use(fileupload({ parseNested: true }));
 app.use(express.static(path.join(__dirname, 'client/build')));
 //app.use(express.static(BACKUP_DIR));
@@ -24,10 +29,9 @@ app.get('/download', (req, res) => {
    res.json(dirTree(BACKUP_DIR))
 })
 
-app.get('/file/', (req, res) => {
-   console.log(req.query.path1)
-   res.set('Content-Type', 'multipart/form-data')
-   res.download(path.join('C:/DEV/home_file_server/files/lolol.d'))
+app.post('/file', (req, res) => {
+   let dirPath = req.body.filePath
+   res.download(path.join(dirPath))
 })
 
 app.post('/upload', (req, res) => {

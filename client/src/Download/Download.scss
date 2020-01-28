@@ -7,3 +7,40 @@
    color: $main_color;
    user-select: none;
 }
+
+.download-list{
+
+   padding-left:18px;
+   p{
+      margin: 6px 0;
+   &:hover  {
+      text-decoration: underline;
+   }} 
+   &__folder{
+      padding-left:18px;
+      cursor: pointer;
+      font-weight:800 ;
+      border: 1px dotted $main_color;
+      border-width: 0 0 0 1px;
+   }
+   .folder {
+      &--closed >{ 
+         li,ul {
+         display: none
+         } 
+      }
+      &--open >{ 
+         li,ul {
+         display: block
+         } 
+      }
+   }
+
+   &__files{
+      list-style: none;
+      font-weight:400 ;
+      border: 1px dotted $main_color;
+      border-width: 0 0 0 1px;
+   }
+
+}

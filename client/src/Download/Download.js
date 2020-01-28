@@ -5,6 +5,7 @@ import './Download.scss'
 function Download() {
 
    let [directories, setDirectories] = useState({ children: [] })
+
    useEffect(() => {
       axios.get('/download')
          .then(res => {
@@ -19,41 +20,67 @@ function Download() {
    }, [])
 
    function downloadFile(path) {
+      //TODO : force download , directory download///
+      axios.post(`/file`, { filePath: path }, {
+         headers: {
+            responseType: 'blob'
 
-      axios.get('/file/?path1=' + path)
+         }
+      })
          .then(res => {
             console.log(res.data)
-            return res.data
          }).catch(err => {
             console.log('catched: ', err.data)
          })
    }
+   function toggleDirectoryExpand(e) {
+      e.stopPropagation()
+      let currentVlass = e.currentTarget.className;
+      e.currentTarget.className = (currentVlass === `download-list__folder folder--closed`)
+         ? 'download-list__folder folder--open'
+         : 'download-list__folder folder--closed'
+
+   }
+
+
    function renderDirectories(directories) {
-      return directories.children.map((item, i) => {
+
+      let dirArr = [],
+         fileArr = []
+      directories.children.map((item, i) => {
          if (item.type === 'directory') {
-
-            return (<ul
-
-
-               key={item.path}
-            >  &#x27A5;{item.name}</ul >
+            dirArr.push(
+               <ul
+                  className={`download-list__folder folder--closed`}
+                  key={item.path}
+                  onClick={toggleDirectoryExpand}
+               ><p
+                  onClick={() => { }}
+               >{item.name}
+                  </p>
+                  {renderDirectories(item)}
+               </ul >
             )
          } else {
-            return (
+            fileArr.push(
                <li
+                  className={'download-list__files'}
                   key={item.path}
                   onClick={() => { downloadFile(item.path) }}
-               >{item.name}</li>
+               ><p><em>{item.name}</em></p></li>
             )
          }
       })
+      return [...dirArr, ...fileArr]
    }
 
    return (
       <div className="Download">
-         <ul>{
-            renderDirectories(directories)
-         }</ul>
+         <ul
+            className={'download-list'}
+         >{
+               renderDirectories(directories)
+            }</ul>
       </div>
    );
 }
