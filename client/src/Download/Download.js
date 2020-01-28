@@ -24,7 +24,6 @@ function Download() {
       axios.post(`/file`, { filePath: path }, {
          headers: {
             responseType: 'blob'
-
          }
       })
          .then(res => {
@@ -33,18 +32,16 @@ function Download() {
             console.log('catched: ', err.data)
          })
    }
+
    function toggleDirectoryExpand(e) {
       e.stopPropagation()
       let currentVlass = e.currentTarget.className;
       e.currentTarget.className = (currentVlass === `download-list__folder folder--closed`)
          ? 'download-list__folder folder--open'
          : 'download-list__folder folder--closed'
-
    }
 
-
    function renderDirectories(directories) {
-
       let dirArr = [],
          fileArr = []
       directories.children.map((item, i) => {

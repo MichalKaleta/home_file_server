@@ -10,8 +10,10 @@ env.config()
 const app = express();
 
 const PORT = process.env.PORT || 5000;
-const BACKUP_DIR = process.env.BACKUP_DIR || path.join(__dirname, '/files')
+const BACKUP_DIR = path.join(__dirname, process.env.BACKUP_DIR)
+   || path.join(__dirname, '/files')
 
+fs.mkdirSync(BACKUP_DIR);
 // parse various different custom JSON types as JSON
 app.use(bodyParser.json())
 app.use(bodyParser.raw({ type: 'application/*.*' }))
