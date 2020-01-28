@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios'
 import './Upload.scss'
-function Upload() {
+function Upload({ newFileUploaded }) {
 
    let [uploadDisabled, setUploadDisabled] = useState(true)
    let [filesInfo, setFilesInfo] = useState({ amount: 0, size: 0 })
@@ -18,6 +18,7 @@ function Upload() {
       axios.post('/upload', formData)
          .then(res => {
             if (res.data.success) {
+               newFileUploaded(true)
                console.log('res:  ', res.data.success)
             } else {
                throw res

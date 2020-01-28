@@ -5,9 +5,18 @@ import Download from './Download/Download';
 import Upload from './Upload/Upload';
 
 function App() {
+
+   function newFileUploaded(bool) {
+
+
+   }
+
+
    return (
       <div className="App">
-         < Upload />
+         < Upload
+            newFileUploaded={newFileUploaded}
+         />
          < Download />
       </div>
    );
