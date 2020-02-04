@@ -5,7 +5,8 @@
    "scripts": {
       "server": "nodemon server.js",
       "dev": "concurrently - kill-others \"npm run server\" \"cd client && npm run start\"",
-      "deploy": "cd client && npm run build && scp -r ./build pi@192.168.8.154:/home/pi/server/client"
+      "build": "cd client && npm run build",
+      "deploy": "npm run build && scp -r ./build pi@192.168.8.154:/home/pi/server/client"
    },
    "dependencies": {
       "axios": "^0.19.2",
