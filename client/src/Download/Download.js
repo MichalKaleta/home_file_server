@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createElement } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import './Download.scss'
 
-function Download() {
+function Download({ newFiles }) {
 
    let [directories, setDirectories] = useState({ children: [] })
 
@@ -17,7 +17,7 @@ function Download() {
          }).catch(err => {
             console.log('catched: ', err.data)
          })
-   }, [])
+   }, [newFiles])
 
    function downloadFile(path) {
       //TODO : force download , directory download///
@@ -44,7 +44,7 @@ function Download() {
    function renderDirectories(directories) {
       let dirArr = [],
          fileArr = []
-      directories.children.map((item, i) => {
+      directories.children.forEach(function (item) {
          if (item.type === 'directory') {
             dirArr.push(
                <ul

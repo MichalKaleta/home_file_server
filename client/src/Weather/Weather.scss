@@ -1,0 +1,20 @@
+@import '../_common/variables.scss';
+
+.weather{
+   &__container{
+      display: flex;
+      align-items: center;
+     line-height: 0.5rem;
+   }
+
+   &__temperature{
+      font-size: 7rem;
+   }
+
+   &__description{
+      position: relative;
+      bottom: $size-medium;
+      padding-left: $size-large;
+   }
+
+}

@@ -1,4 +1,10 @@
-$main_color :  #83A0A0;
+$main_color :  #8396B0;
+
+$size_xlarge: 32px;
+$size_large: 24px;
+$size_medium: 16px;
+$size_small: 8px;
+$size_tiny: 4px;
 
 @mixin center_content {
    display: flex;
