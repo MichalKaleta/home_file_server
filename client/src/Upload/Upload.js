@@ -1,43 +1,61 @@
 import React, { useState } from 'react';
 import axios from 'axios'
+import qs from 'qs'
+import Counter from './Counter'
 import './Upload.scss'
-function Upload({ newFileUploaded }) {
+function Upload() {
 
    let [uploadDisabled, setUploadDisabled] = useState(true)
    let [filesInfo, setFilesInfo] = useState({ amount: 0, size: 0 })
    let [files, setFiles] = useState([])
+   let [sizeUploaded, setSizeUploaded] = useState(0);
+
+   let syncedSize = sizeUploaded;
 
    function submitUpload(e) {
       e.preventDefault()
-      var formData = new FormData(e.target);
-      for (let file of files) {
-         let dir = file.webkitRelativePath;
-         dir = dir.slice(0, -file.name.length)
-         formData.append("paths", dir);
-      }
-      axios.post('/upload', formData)
-         .then(res => {
-            if (res.data.success) {
-               newFileUploaded(true)
-               console.log('res:  ', res.data.success)
-            } else {
-               throw res
+      function sendFile(file) {
+         axios.post('/upload', qs.stringify(file), {
+            headers: {
+               'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
             }
-         }).catch(err => {
-            console.log('catched: ', err.response.data)
-         })
+         }).then(res => {
+            if (res.data.success) {
+               let floatSize = parseFloat(res.data.size)
+               syncedSize += floatSize;
+               /* console.log('newSize:', newSize,'=res:',floatSize,'+state:', sizeUploaded) */
+               setSizeUploaded(syncedSize)
+               // newFileUploaded(true)
+            } else { throw res }
+         }).catch(err => console.log('catched: ', err.response.data))
+      }
+      Array.prototype.map.call(files, (file) => {
+         const reader = new FileReader();
+         const dir = file.webkitRelativePath.slice(0, -file.name.length)
+         const name = file.name
+         const size = parseInt(file.size / 10000) / 100;
+         reader.onload = function () {
+            sendFile({
+               data: reader.result,
+               dir,
+               name,
+               size
+            })
+         }
+         reader.readAsDataURL(file)
+      })
    }
 
    function handleFilesAdd(e) {
       let files = e.target.files
       let size = 0;
-      Array.prototype.forEach.call(files, (file) => size += file.size)
-      size = parseInt(size / 10000) / 100 + ' MB'
-      setFiles(files)
+      Array.prototype.forEach.call(files, (file) => size += parseInt(file.size / 10000) / 100)
+      size += ' MB'
       setFilesInfo({
          size,
          amount: files.length
       })
+      setFiles(files)
       setUploadDisabled(false)
    }
    let labelFor = uploadDisabled ? 'upload-form__input-browse' : 'upload-form__input-upload'
@@ -78,6 +96,10 @@ function Upload({ newFileUploaded }) {
                disabled={uploadDisabled}
             />
          </form>
+         <Counter
+            sizeLeft={syncedSize}
+            totalSize={filesInfo.size}
+         />
       </div>
    );
 }

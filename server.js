@@ -3,7 +3,6 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const path = require('path')
 const fs = require('fs')
-const fileupload = require("express-fileupload");
 const dirTree = require("directory-tree");
 const axios = require('axios')
 
@@ -13,12 +12,10 @@ const BACKUP_DIR = path.join(__dirname, process.env.BACKUP_DIR)
    || path.join(__dirname, '/files')
 if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR);
 
-app.use(bodyParser.json())
-app.use(bodyParser.raw({ type: 'application/*.*' }))
-app.use(bodyParser.text({ type: 'text/html' }))
-app.use(express.urlencoded({ extended: true }))
+//app.use(bodyParser.json({ limit: '50mb', extended: true }))
+app.use(bodyParser.raw({ limit: '50mb', type: 'application/*.*' }))
+app.use(express.urlencoded({ limit: '50mb', extended: true }))
 
-app.use(fileupload({ parseNested: true }));
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/', (req, res) => {
@@ -52,6 +49,19 @@ app.get('/weather', (req, res) => {
       }).catch(err => res.send(err))
 })
 
+app.post('/upload', (req, res) => {
+   const { data, dir, name, size } = req.body
+   let file = data.split(';base64,').pop();
+   let fullPath = path.join(BACKUP_DIR, dir)
+   if (!fs.existsSync(fullPath))
+      fs.mkdirSync(fullPath, { recursive: true });
+   try {
+      fs.writeFile(path.join(fullPath, name), file, 'base64', function () {
+         res.send({ success: 'files uploded!', size })
+      })
+   } catch (err) { throw err; }
+});
+
 app.get('/download', (req, res) => {
    res.json(dirTree(BACKUP_DIR))
 })
@@ -61,20 +71,4 @@ app.post('/file', (req, res) => {
    res.download(path.join(dirPath))
 })
 
-app.post('/upload', (req, res) => {
-   let files = req.files.upload.length > 1 ? req.files.upload : [req.files.upload];
-   let paths = Array.isArray(req.body.paths) ? req.body.paths : [req.body.paths];
-   files.forEach((file, index) => {
-      let dir = path.join(BACKUP_DIR, paths[index])
-      if (!fs.existsSync(dir)) {
-         fs.mkdirSync(dir);
-      }
-      file.mv(dir + file.name, (err) => {
-         console.log('err0:  ', err)
-         if (err) throw err;
-      })
-   })
-
-   res.send({ success: 'files uploded!' })
-})
 app.listen(PORT) 
