@@ -3,6 +3,7 @@ import axios from 'axios'
 import qs from 'qs'
 import Counter from './Counter'
 import './Upload.scss'
+
 function Upload() {
 
    let [uploadDisabled, setUploadDisabled] = useState(true)
@@ -14,6 +15,7 @@ function Upload() {
 
    function submitUpload(e) {
       e.preventDefault()
+
       function sendFile(file) {
          axios.post('/upload', qs.stringify(file), {
             headers: {
@@ -23,17 +25,16 @@ function Upload() {
             if (res.data.success) {
                let floatSize = parseFloat(res.data.size)
                syncedSize += floatSize;
-               /* console.log('newSize:', newSize,'=res:',floatSize,'+state:', sizeUploaded) */
                setSizeUploaded(syncedSize)
                // newFileUploaded(true)
             } else { throw res }
          }).catch(err => console.log('catched: ', err.response.data))
       }
+
       Array.prototype.map.call(files, (file) => {
          const reader = new FileReader();
          const dir = file.webkitRelativePath.slice(0, -file.name.length)
-         const name = file.name
-         const size = parseInt(file.size / 10000) / 100;
+         const { name, size } = file
          reader.onload = function () {
             sendFile({
                data: reader.result,
@@ -45,12 +46,11 @@ function Upload() {
          reader.readAsDataURL(file)
       })
    }
-
+   ///////////////////  2zl ODDAC   ////////////////////
    function handleFilesAdd(e) {
       let files = e.target.files
       let size = 0;
-      Array.prototype.forEach.call(files, (file) => size += parseInt(file.size / 10000) / 100)
-      size += ' MB'
+      Array.prototype.forEach.call(files, (file) => size += file.size)
       setFilesInfo({
          size,
          amount: files.length
@@ -58,13 +58,17 @@ function Upload() {
       setFiles(files)
       setUploadDisabled(false)
    }
+
    let labelFor = uploadDisabled ? 'upload-form__input-browse' : 'upload-form__input-upload'
 
    return (
       <div className="Upload">
-         <div
-            className='file-info'
-         >{filesInfo.amount} files chosen <br />{filesInfo.size} total size
+         <div className='file-info'>
+            <Counter
+               sizeUploaded={syncedSize}
+               totalSize={filesInfo.size}
+               filesAmount={filesInfo.amount}
+            />
          </div>
          <form
             className='upload-form'
@@ -76,9 +80,8 @@ function Upload() {
             <label
                className='upload-form__label'
                htmlFor={labelFor}
-            >{
-                  (uploadDisabled && <p>wybierz<br />folder</p>)
-                  || (<p>wyślij</p>)
+            >{(uploadDisabled && <p>wybierz<br />folder</p>)
+               || (<p>wyślij</p>)
                }</label>
             <input
                id='upload-form__input-browse'
@@ -96,11 +99,10 @@ function Upload() {
                disabled={uploadDisabled}
             />
          </form>
-         <Counter
-            sizeLeft={syncedSize}
-            totalSize={filesInfo.size}
-         />
-      </div>
+
+
+
+      </div >
    );
 }
 

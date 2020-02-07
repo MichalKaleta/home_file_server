@@ -8,8 +8,12 @@ const axios = require('axios')
 
 const app = express();
 const PORT = process.env.PORT;
-const BACKUP_DIR = path.join(__dirname, process.env.BACKUP_DIR)
+const BACKUP_DIR = path.join(process.env.BACKUP_DIR)
    || path.join(__dirname, '/files')
+
+const airlyKey = process.env.AIRLY_KEY
+const weatherKey = process.env.WEATHER_KEY
+
 if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR);
 
 //app.use(bodyParser.json({ limit: '50mb', extended: true }))
@@ -25,7 +29,7 @@ app.get('/', (req, res) => {
 app.get('/air', (req, res) => {
    const { lat, lng } = req.query;
    axios.get('https://airapi.airly.eu/v2/measurements/nearest', {
-      params: { lat, lng, maxDistanceKM: 10, indexType: 'AIRLY_CAQI', apikey: process.env.AIRLY_KEY },
+      params: { lat, lng, maxDistanceKM: 10, indexType: 'AIRLY_CAQI', apikey: airlyKey },
       headers: { 'Accept-Language': 'pl' }
    }).then(air => {
       res.json({
@@ -40,7 +44,7 @@ app.get('/air', (req, res) => {
 app.get('/weather', (req, res) => {
    const { lat, lng } = req.query;
    axios.get('http://api.openweathermap.org/data/2.5/forecast', {
-      params: { lat, lon: lng, units: 'metric', lang: 'pl', APPID: process.env.WEATHER_KEY }
+      params: { lat, lon: lng, units: 'metric', lang: 'pl', APPID: weatherKey }
    })
       .then(weather => {
          const { icon, description } = weather.data.list[0].weather[0]
@@ -59,7 +63,10 @@ app.post('/upload', (req, res) => {
       fs.writeFile(path.join(fullPath, name), file, 'base64', function () {
          res.send({ success: 'files uploded!', size })
       })
-   } catch (err) { throw err; }
+   } catch (err) {
+      console.log(err)
+      throw err;
+   }
 });
 
 app.get('/download', (req, res) => {

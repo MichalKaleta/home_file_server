@@ -6,14 +6,15 @@
       "server": "nodemon server.js",
       "dev": "concurrently - kill-others \"npm run server\" \"cd client && npm run start\"",
       "build": "cd client && npm run build",
-      "deploy": "npm run build && scp -r ./build pi@192.168.8.154:/home/pi/server/client"
+      "deploy-client": "npm run build && scp -r ./client/build pi@192.168.8.154:/home/pi/server/client/",
+      "deploy-server": "scp ./server.js package.json pi@192.168.8.154:/home/pi/server/",
+      "deploy-all": "npm run deploy-client && npm run deploy-server"
    },
    "dependencies": {
       "axios": "^0.19.2",
       "body-parser": "^1.19.0",
       "directory-tree": "^2.2.4",
       "express": "^4.17.1",
-      "express-fileupload": "^1.1.6",
       "node-sass": "^4.13.1"
    },
    "devDependencies": {

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './airQuality.scss';
 
-
-const emojis = ['😻', '🙂', '😑', '😬', '🙊', '😤', '🤬', '🤢', '💀']
+const emojis = ['😻', '🙂', '😑', '😬', '🙊', '😤', '🤬', '🤢', '💀', '💀', '💀', '💀', '💀', '💀', '💀', '💀', '💀', '💀', '💀', '💀']
 
 export default function AirQuality({ location }) {
 

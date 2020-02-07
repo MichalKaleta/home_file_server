@@ -1,0 +1,15 @@
+@import '../_common/variables.scss';
+
+.progress-bar {
+   &__wraper {
+      width: 100%;
+      //height: 50px;
+   }
+
+   &__bar {
+      width: 0%;
+      height: 25px;
+      opacity: 0.5;
+      background-color: $main_color;
+   }
+}
