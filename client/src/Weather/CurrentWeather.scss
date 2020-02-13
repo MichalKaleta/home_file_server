@@ -1,16 +1,16 @@
 @import '../_common/variables.scss';
 
-.weather{
-   &__container{
+.weather-current {
+   &__container {
       display: flex;
       align-items: center;
-      }
+   }
 
-   &__temperature{
+   &__temperature {
       font-size: 7rem;
    }
 
-   &__description{
+   &__description {
       position: relative;
       bottom: $size-medium;
       padding-left: $size-large;

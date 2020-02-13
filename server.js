@@ -16,10 +16,8 @@ const weatherKey = process.env.WEATHER_KEY
 
 if (!fs.existsSync(BACKUP_DIR)) fs.mkdirSync(BACKUP_DIR);
 
-//app.use(bodyParser.json({ limit: '50mb', extended: true }))
 app.use(bodyParser.raw({ limit: '50mb', type: 'application/*.*' }))
 app.use(express.urlencoded({ limit: '50mb', extended: true }))
-
 app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/', (req, res) => {
@@ -47,14 +45,25 @@ app.get('/weather', (req, res) => {
       params: { lat, lon: lng, units: 'metric', lang: 'pl', APPID: weatherKey }
    })
       .then(weather => {
-         const { icon, description } = weather.data.list[0].weather[0]
-         const temp = weather.data.list[0].main.temp
-         res.json({ description, temp, icon })
+         // console.log(weather)
+         const temp = weather.data.list[0].main.temp;
+         const { icon, description } = weather.data.list[0].weather[0];
+         const forecast = weather.data.list.filter(
+            ({ dt_txt }) => {
+               let dt15 = dt_txt.split(" ")
+               return dt15[1] === "15:00:00"
+            })
+         res.json({
+            weather: { icon, description, temp },
+            forecast
+         })
+         //   res.json({ description, temp, icon })
       }).catch(err => res.send(err))
 })
 
 app.post('/upload', (req, res) => {
    const { data, dir, name, size } = req.body
+   console.log(req.body.name);
    let file = data.split(';base64,').pop();
    let fullPath = path.join(BACKUP_DIR, dir)
    if (!fs.existsSync(fullPath))

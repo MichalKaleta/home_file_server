@@ -1,0 +1,27 @@
+@import "../_common/variables.scss";
+
+.weather-forecast {
+
+   &__container {
+      color: $main_color;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      padding: $size_medium;
+      width: 33.33%;
+      font-size: $size_large;
+   }
+
+   &__graph {
+      width: 100%;
+      stroke: $second_color;
+      fill: none;
+      stroke-width: 1;
+   }
+
+   &__temperatures {
+      padding-top: $size_medium;
+      display: flex;
+      justify-content: space-between;
+   }
+}

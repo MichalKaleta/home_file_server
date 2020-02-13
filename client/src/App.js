@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.scss';
 import AirQuality from './AirQuality/airQuality'
-import Weather from './Weather/Weather'
+import Weather from './Weather'
 import Download from './Download/Download';
 import Upload from './Upload/Upload';
+import Forecast from './Weather/Forecast';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
                   location={location}
                />
             </div>)}
+         <Forecast />
          <Upload
             newFileUploaded={newFileUploaded}
          />

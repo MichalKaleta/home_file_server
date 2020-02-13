@@ -4,6 +4,7 @@ import qs from 'qs'
 import Counter from './Counter'
 import './Upload.scss'
 
+
 function Upload() {
 
    let [uploadDisabled, setUploadDisabled] = useState(true)
@@ -13,54 +14,50 @@ function Upload() {
 
    let syncedSize = sizeUploaded;
 
+   function sendFile(file) {
+      axios.post('/upload', qs.stringify(file), {
+         headers: {
+            'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+         }
+      }).then(res => {
+         if (res.data.success) {
+            let floatSize = parseFloat(res.data.size)
+            syncedSize += floatSize;
+            setSizeUploaded(syncedSize)
+            // newFileUploaded(true)
+         } else { throw res }
+      }).catch(err => console.log('catched: ', err.response.data))
+   }
+
    function submitUpload(e) {
       e.preventDefault()
-
-      function sendFile(file) {
-         axios.post('/upload', qs.stringify(file), {
-            headers: {
-               'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
-            }
-         }).then(res => {
-            if (res.data.success) {
-               let floatSize = parseFloat(res.data.size)
-               syncedSize += floatSize;
-               setSizeUploaded(syncedSize)
-               // newFileUploaded(true)
-            } else { throw res }
-         }).catch(err => console.log('catched: ', err.response.data))
-      }
-
       Array.prototype.map.call(files, (file) => {
          const reader = new FileReader();
          const dir = file.webkitRelativePath.slice(0, -file.name.length)
          const { name, size } = file
-         reader.onload = function () {
-            sendFile({
-               data: reader.result,
-               dir,
-               name,
-               size
-            })
-         }
+         reader.onload = sendFile({
+            data: reader.result,
+            dir,
+            name,
+            size
+         })
          reader.readAsDataURL(file)
       })
    }
-   ///////////////////  2zl ODDAC   ////////////////////
+
    function handleFilesAdd(e) {
       let files = e.target.files
       let size = 0;
       Array.prototype.forEach.call(files, (file) => size += file.size)
+      setUploadDisabled(false)
       setFilesInfo({
          size,
          amount: files.length
       })
       setFiles(files)
-      setUploadDisabled(false)
    }
 
    let labelFor = uploadDisabled ? 'upload-form__input-browse' : 'upload-form__input-upload'
-
    return (
       <div className="Upload">
          <div className='file-info'>
@@ -105,5 +102,4 @@ function Upload() {
       </div >
    );
 }
-
 export default Upload;

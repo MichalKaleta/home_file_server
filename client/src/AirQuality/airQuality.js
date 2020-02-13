@@ -13,7 +13,7 @@ export default function AirQuality({ location }) {
    useEffect(() => {
       const apiCallInterval = setInterval(() => {
          setTime(new Date())
-      }, (1000 * 60 * 60))
+      }, (1000 * 60 * 20))
       getAirQuality(location.latitude, location.longitude)
       return () => clearInterval(apiCallInterval)
    }, [location, time])
