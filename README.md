@@ -4,8 +4,8 @@ It will keep uploaded directory strucure
 <img src='./client/public/screenshot.png' />
 <br />
 <b>Tech stack: </b> <br />
-Client: React, Sass <br />
-Server: Node , Express, Express-Fileupload <br />
+Client: React, Redux, Sass<br />
+Server: Node.js, Express <br />
 
 <b>INSATLL</b><br />
 There are 2 separate package.json files for server and client

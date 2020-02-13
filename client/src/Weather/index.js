@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { getWeather } from './redux/actions'
 import CurrentWeather from './CurrentWeather';
-import Forecast from './Forecast';
 
 function Weather({ location }) {
    const dispatch = useDispatch();
    const [time, setTime] = useState()
-   const [errorMessage, setErrorMessage] = useState()
 
    useEffect(() => {
       const apiCallInterval = setInterval(() => {
@@ -17,11 +15,7 @@ function Weather({ location }) {
       return () => clearInterval(apiCallInterval)
    }, [location, time])
 
-   return (
-      <React.Fragment>
-         <CurrentWeather />
-      </React.Fragment>
-   )
+   return <CurrentWeather />
 }
 
 export default Weather

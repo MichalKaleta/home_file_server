@@ -16,5 +16,4 @@ function CurrentWeather() {
          </div >) || (<div>Loading...</div>)
    )
 }
-
 export default CurrentWeather

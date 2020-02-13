@@ -20,7 +20,6 @@ function App() {
          setLocation({ latitude, longitude })
       })
    }, [])
-
    function newFileUploaded(bool) {
       setNewFiles(true)
    }
